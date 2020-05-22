@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+ARGS=
+if [[ $# -gt 1 ]]; then
+  ARGS="$@"
+else
+  ARGS="corgi:latest"
+fi
+
+echo "ARGS $ARGS"
+
+docker build . -f .docker/Dockerfile -t $ARGS
