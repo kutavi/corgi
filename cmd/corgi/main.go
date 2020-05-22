@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"net/http"
 	"log"
+	"net/http"
+	"os"
 )
 
 func getenv(name, defaultValue string) string {
@@ -17,9 +17,10 @@ func getenv(name, defaultValue string) string {
 
 func main() {
 	port := getenv("APP_PORT", "6969")
+	log.Printf("Starts at %s", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 
 	if err != nil {
-		log.Fatalf("Could not start server: %s\n", err.Error())
+		log.Fatalf("Could not start server: %s", err.Error())
 	}
 }
