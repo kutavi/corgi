@@ -42,7 +42,7 @@ mod:
 vendor: mod
 		go mod vendor
 
-build: vendor
+build:
 		go build -a -v -mod=vendor -o $(EXEC) $(MAINCMD)
 
 run: vendor
