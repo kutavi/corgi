@@ -51,10 +51,4 @@ run: vendor
 clean:
 		rm -f $(EXEC)
 
-install:
-		cp $(EXEC) /usr/local/bin
-
-uninstall:
-		rm -f /usr/local/bin/$(EXEC)
-
-.PHONY: env test fmt lint vet mod vendor build run clean install uninstall
+.PHONY: env test fmt lint vet mod vendor build run clean
