@@ -39,7 +39,7 @@ mod:
 		go mod tidy
 		go mod verify
 
-vendor: mod
+vendor:
 		go mod vendor
 
 build:
