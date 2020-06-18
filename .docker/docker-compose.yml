@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  corgy:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    environment:
+      - APP_PORT=6969
+    ports:
+      - "6969:6969"
+    restart: on-failure

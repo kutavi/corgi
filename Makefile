@@ -1,54 +1,85 @@
-default: build
+SHELL := /bin/bash
 
-GO111MODULE?=on
-export GO111MODULE
+NAME := corgi
+PKG := github.com/kutavi/${NAME}
+MAINCMD := ./cmd/${NAME}
 
-CGO_ENABLED?=0
-export CGO_ENABLED
+GO111MODULE := on
+CGO_ENABLED := 0
 
-GOOS?=linux
-export GOOS
+IMAGE := corgi:latest
+VERSION?=0.0.1
+VER_FLAGS=-X ${PKG}/version=${VERSION}
+GO_LDFLAGS=-ldflags "-w -s ${VER_FLAGS}"
+GO_LDFLAGS_STATIC=-ldflags "-w -s ${VER_FLAGS} -extldflags -static"
 
-GOARCH?=amd64
-export GOARCH
+#Commands
+GO := go
+DOCKER := docker
+COMPOSE := docker-compose
 
-EXEC?=corgi
-MAINCMD?=./cmd/corgi
+.PHONY: default
+default: static
 
+.PHONY: env
 env:
-		go env
+		$(GO) env
 
+.PHONY: test
 test:
-		go test -timeout 60s $$(go list ./...)
+		$(GO) test -timeout 60s $(shell go list ./... | grep -v vendor)
 
+.PHONY: test-coverage
 test-coverage:
-		go test -timeout 60s -coverprofile cover.out -covermode atomic $$(go list ./...)
-		go tool cover -func cover.out
+		$(GO) test -timeout 60s -coverprofile cover.out -covermode atomic $(shell go list ./... | grep -v vendor)
+		$(GO) tool cover -func cover.out
 		rm cover.out
 
+.PHONY: fmt
 fmt:
-		go fmt $$(go list ./...)
+		$(shell gofmt -s -l . | grep -v vendor)
 
+.PHONY: lint
 lint:
-		golint $$(go list ./...)
+		$(shell golint ./... | grep -v vendor)
 
+lint-ci:
+		$(DOCKER) run --rm -v $(shell pwd):/app:ro -w /app golangci/golangci-lint:v1.27.0 golangci-lint run
+
+.PHONY: vet
 vet:
-		go vet $$(go list ./...)
+		$(GO) vet $(shell $(GO) list ./...| grep -v vendor)
 
+.PHONY: mod
 mod:
-		go mod tidy
-		go mod verify
+		$(GO) mod tidy
+		$(GO) mod verify
 
+.PHONY: vendor
 vendor:
-		go mod vendor
+		$(GO) mod vendor
 
+.PHONY: build
 build:
-		go build -a -v -mod=vendor -o $(EXEC) $(MAINCMD)
+		$(GO) build -a -mod=vendor ${GO_LDFLAGS} -o ${NAME} ${MAINCMD}
 
-run: vendor
-		go run -mod=vendor $(MAINCMD)
+.PHONY: static
+static:
+		CGO_ENABLED=${CGO_ENABLED} $(GO) build -a -mod=vendor ${GO_LDFLAGS_STATIC} -o ${NAME} ${MAINCMD}
 
+.PHONY: clean
 clean:
-		rm -f $(EXEC)
+		rm -f ${NAME}
 
-.PHONY: env test fmt lint vet mod vendor build run clean
+## Docker/Compose commands
+.PHONY: image
+image:
+		$(DOCKER) build . -f .docker/Dockerfile -t ${IMAGE}
+
+.PHONY: up
+up:
+		$(COMPOSE) -f .docker/docker-compose.yml up --force-recreate --build
+
+.PHONY: down
+down:
+		$(COMPOSE) -f .docker/docker-compose.yml down --volumes

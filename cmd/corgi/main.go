@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/kutavi/corgi/internal/websocket"
 )
 
 func getenv(name, defaultValue string) string {
@@ -22,6 +23,12 @@ func main() {
 	log.Printf("Starts at %s", port)
 
 	r := mux.NewRouter()
+
+	r.HandleFunc("/c", websocket.EchoCopyWriterOnly)
+	r.HandleFunc("/f", websocket.EchoCopyFull)
+	r.HandleFunc("/r", websocket.EchoReadAllWriter)
+	r.HandleFunc("/m", websocket.EchoReadAllWriteMessage)
+	r.HandleFunc("/p", websocket.EchoReadAllWritePreparedMessage)
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 

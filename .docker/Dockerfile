@@ -1,9 +1,10 @@
 FROM golang:1.14-alpine3.11 as builder
-RUN apk update && apk add --no-cache make
+RUN apk update && apk add --no-cache make bash ca-certificates
 WORKDIR /opt/corgi
 COPY . .
-RUN make vendor
-RUN make build
+RUN set -xe && \
+        make env && \
+        make mod vendor static
 
 FROM alpine:3.11
 COPY --from=builder /opt/corgi/corgi .
