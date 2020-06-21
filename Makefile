@@ -46,8 +46,8 @@ fmt:
 lint:
 		[[ -z "$$(golint ${PACKAGES} | tee /dev/stderr)" ]] || exit 1
 
-.PHONY: lint-ci
-lint-ci:
+.PHONY: dockerized-lint-ci
+dockerized-lint-ci:
 		$(DOCKER) run --rm -v $(shell pwd):/app:ro -w /app golangci/golangci-lint:v1.27.0 golangci-lint run
 
 .PHONY: vet
@@ -78,7 +78,7 @@ static:
 clean:
 		rm -f ${NAME}
 
-## Docker/Compose commands
+# Docker/Compose commands
 .PHONY: image
 image:
 		$(DOCKER) build . -f .docker/Dockerfile -t ${IMAGE}:${IMAGE_TAG}
