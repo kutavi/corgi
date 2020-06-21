@@ -54,6 +54,9 @@ dockerized-lint-ci:
 vet:
 		$(GO) vet ${PACKAGES}
 
+.PHONY: checks
+checks: fmt lint vet
+
 .PHONY: mod
 mod:
 		$(GO) mod tidy
@@ -62,9 +65,6 @@ mod:
 .PHONY: vendor
 vendor:
 		$(GO) mod vendor
-
-.PHONY: checks
-checks: fmt lint vet
 
 .PHONY: build
 build:
