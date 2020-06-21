@@ -7,17 +7,17 @@ MAINCMD := ./cmd/${NAME}
 GO111MODULE := on
 export GO111MODULE
 CGO_ENABLED := 0
-
-IMAGE := corgi:latest
 VERSION?=0.0.1
 VER_FLAGS=-X ${PKG}/version=${VERSION}
 GO_LDFLAGS=-ldflags "-w -s ${VER_FLAGS}"
 GO_LDFLAGS_STATIC=-ldflags "-w -s ${VER_FLAGS} -extldflags -static"
 
-#Commands
 GO := go
 DOCKER := docker
 COMPOSE := docker-compose
+
+IMAGE := ${NAME}
+IMAGE_TAG := latest
 
 PACKAGES = $(shell $(GO) list ./... | grep -v vendor)
 
@@ -81,7 +81,7 @@ clean:
 ## Docker/Compose commands
 .PHONY: image
 image:
-		$(DOCKER) build . -f .docker/Dockerfile -t ${IMAGE}
+		$(DOCKER) build . -f .docker/Dockerfile -t ${IMAGE}:${IMAGE_TAG}
 
 .PHONY: up
 up:
