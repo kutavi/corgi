@@ -63,8 +63,8 @@ mod:
 vendor:
 		$(GO) mod vendor
 
-.PHONY: prebuild
-prebuild: fmt lint vet
+.PHONY: checks
+checks: fmt lint vet
 
 .PHONY: build
 build:
