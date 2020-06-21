@@ -74,7 +74,7 @@ func EchoCopyWriterOnly(w http.ResponseWriter, r *http.Request) {
 	echoCopy(w, r, true)
 }
 
-// EchoCopyFull
+// EchoCopyFull func
 func EchoCopyFull(w http.ResponseWriter, r *http.Request) {
 	echoCopy(w, r, false)
 }
@@ -144,12 +144,12 @@ func EchoReadAllWriter(w http.ResponseWriter, r *http.Request) {
 	echoReadAll(w, r, false, false)
 }
 
-// EchoReadAllWriteMessage
+// EchoReadAllWriteMessage f
 func EchoReadAllWriteMessage(w http.ResponseWriter, r *http.Request) {
 	echoReadAll(w, r, true, false)
 }
 
-// EchoReadAllWritePreparedMessage
+// EchoReadAllWritePreparedMessage f
 func EchoReadAllWritePreparedMessage(w http.ResponseWriter, r *http.Request) {
 	echoReadAll(w, r, true, true)
 }

@@ -63,6 +63,9 @@ mod:
 vendor:
 		$(GO) mod vendor
 
+.PHONY: prebuild
+prebuild: fmt lint vet
+
 .PHONY: build
 build:
 		$(GO) build -a -mod=vendor ${GO_LDFLAGS} -o ${NAME} ${MAINCMD}
