@@ -52,7 +52,7 @@ lint-ci:
 
 .PHONY: vet
 vet:
-		$(GO) vet $(shell $(GO) list ./...| grep -v vendor)
+		$(GO) vet ${PACKAGES}
 
 .PHONY: mod
 mod:
