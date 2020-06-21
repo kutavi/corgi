@@ -5,6 +5,7 @@ PKG := github.com/kutavi/${NAME}
 MAINCMD := ./cmd/${NAME}
 
 GO111MODULE := on
+export GO111MODULE
 CGO_ENABLED := 0
 
 IMAGE := corgi:latest
@@ -18,6 +19,8 @@ GO := go
 DOCKER := docker
 COMPOSE := docker-compose
 
+PACKAGES = $(shell $(GO) list ./... | grep -v vendor)
+
 .PHONY: default
 default: static
 
@@ -27,22 +30,23 @@ env:
 
 .PHONY: test
 test:
-		$(GO) test -timeout 60s $(shell go list ./... | grep -v vendor)
+		$(GO) test -timeout 60s ${PACKAGES}
 
 .PHONY: test-coverage
 test-coverage:
-		$(GO) test -timeout 60s -coverprofile cover.out -covermode atomic $(shell go list ./... | grep -v vendor)
+		$(GO) test -timeout 60s -coverprofile cover.out -covermode atomic ${PACKAGES}
 		$(GO) tool cover -func cover.out
 		rm cover.out
 
 .PHONY: fmt
 fmt:
-		$(shell gofmt -s -l . | grep -v vendor)
+		[[ -z "$$(gofmt -s -l . | tee /dev/stderr)" ]] || exit 1
 
 .PHONY: lint
 lint:
-		$(shell golint ./... | grep -v vendor)
+		[[ -z "$$(golint ${PACKAGES} | tee /dev/stderr)" ]] || exit 1
 
+.PHONY: lint-ci
 lint-ci:
 		$(DOCKER) run --rm -v $(shell pwd):/app:ro -w /app golangci/golangci-lint:v1.27.0 golangci-lint run
 
