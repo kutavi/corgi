@@ -11,7 +11,7 @@ VERSION?=0.0.1
 VER_FLAGS=-X ${PKG}/version=${VERSION}
 GO_LDFLAGS=-ldflags "-w -s ${VER_FLAGS}"
 GO_LDFLAGS_STATIC=-ldflags "-w -s ${VER_FLAGS} -extldflags -static"
-TEST_TAGS := ""
+TEST_TAGS :=
 
 GO := go
 DOCKER := docker
@@ -30,12 +30,12 @@ env:
 		$(GO) env
 
 .PHONY: test test-integration
-test-integration: TEST_TAGS="integration"
+test-integration: TEST_TAGS=integration
 test test-integration:
 		$(GO) test -timeout 60s -tags="${TEST_TAGS}" ${PACKAGES}
 
 .PHONY: test-coverage test-coverage-integration
-test-coverage-integration: TEST_TAGS="integration"
+test-coverage-integration: TEST_TAGS=integration
 test-coverage test-coverage-integration:
 		$(GO) test -timeout 60s -tags="${TEST_TAGS}" -coverprofile cover.out -covermode atomic ${PACKAGES}
 		$(GO) tool cover -func cover.out
