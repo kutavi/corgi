@@ -1,0 +1,8 @@
+FROM golang:1.14.4-alpine3.12
+
+RUN apk add --no-cache make git bash
+
+RUN go get -u golang.org/x/tools/cmd/goimports && \
+    go get -u golang.org/x/lint/golint && \
+    go get -u honnef.co/go/tools/cmd/staticcheck && \
+    go get -u github.com/client9/misspell/cmd/misspell
