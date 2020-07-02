@@ -47,27 +47,25 @@ test-coverage test-coverage-integration:
 .PHONY: goimports
 goimports:
 	@echo ">>> goimports <<<"
-	@DIFFS="$$(goimports -d -e $(FOLDERS))"; \
-		if [[ -n "$${DIFFS}" ]]; then \
-			echo "$${DIFFS}"; \
-			echo -e "\n"; \
-			echo "goimports errors. Run the below command to fix them:"; \
-			echo "goimports -w $(FOLDERS)"; \
-			exit 1; \
-		fi
+	@if [[ -n "$(shell goimports -l ${FOLDERS})" ]]; then \
+		goimports -l ${FOLDERS}; \
+		echo "goimports errors."; \
+		echo 'to fix           :    goimports -w `go list -f '{{.Dir}}' ./... | grep -v vendor`'; \
+		echo 'to display errors:    goimports -d -e `go list -f '{{.Dir}}' ./... | grep -v vendor`'; \
+		exit 1; \
+	fi
 	@echo ""
 
 .PHONY: gofmt
 gofmt:
 	@echo ">>> gofmt <<<"
-	@DIFFS="$$(gofmt -d $(FOLDERS))"; \
-		if [[ -n "$${DIFFS}" ]]; then \
-			echo "$${DIFFS}"; \
-			echo -e "\n"; \
-			echo "gofmt errors. Run the below command to fix them:"; \
-			echo "gofmt -s -w $(FOLDERS)"; \
-			exit 1; \
-		fi
+	@if [[ -n "$(shell gofmt -l ${FOLDERS})" ]]; then \
+		gofmt -l ${FOLDERS}; \
+		echo "goimports errors."; \
+		echo 'to fix           :    gofmt -w `go list -f '{{.Dir}}' ./... | grep -v vendor`'; \
+		echo 'to display errors:    gofmt -d -e `go list -f '{{.Dir}}' ./... | grep -v vendor`'; \
+		exit 1; \
+	fi
 	@echo ""
 
 .PHONY: fmt

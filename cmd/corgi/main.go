@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
 	"github.com/kutavi/corgi/internal/websocket"
+
+	"github.com/gorilla/mux"
 )
 
 func getenv(name, defaultValue string) string {
