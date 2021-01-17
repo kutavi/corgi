@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#@go get -u golang.org/x/lint/golint
+if ! command -v golint &> /dev/null
+then
+  echo "golint does not exist"
+  exit
+fi
+
+echo ">>> golint <<<"
+test -z "$(golint `./scripts/gols` | tee /dev/stderr)" || exit 1

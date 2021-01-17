@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#@go get honnef.co/go/tools/cmd/staticcheck
+if ! command -v staticcheck &> /dev/null
+then
+  echo "staticcheck does not exist"
+  exit
+fi
+
+echo ">>> staticcheck <<<"
+staticcheck -checks="all" -tests `./scripts/gols -d`

@@ -1,10 +1,8 @@
-version: '3.7'
+version: '3.8'
 
 services:
   corgy:
-    build:
-      context: ../
-      dockerfile: .docker/Dockerfile
+    image: ${IMAGE}:${IMAGE_TAG}
     environment:
       - APP_PORT=6969
     ports:

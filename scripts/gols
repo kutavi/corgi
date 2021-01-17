@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+#set -ex
+
+__DIRS=''
+
+if [[ "$1" == "-d" ]]; then
+  __DIRS='-f {{.Dir}}'
+fi
+
+${GO_EXEC:-go} list -tags=$TAGS -mod=vendor ${__DIRS} ./... | grep -v vendor
+
+unset __DIRS

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+echo ">>> gofmt <<<"
+
+FILES=$(gofmt -l `./scripts/gols -d`)
+if [ -n "${FILES}" ]; then
+  echo "Error in files: "
+  echo "${FILES}"
+  echo '>>> Display changes: gofmt -d -e `./scripts/gols -d`'
+  echo '>>> Fix files      : gofmt -s -w `./scripts/gols -d`'
+  exit 1
+fi
+
